@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, doc, setDoc, getDocs, Timestamp, updateDoc, Firestore, FieldValue, arrayUnion, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
@@ -26,8 +26,32 @@ var db = getFirestore();
 function App() {
   let now = new Date();
 
-  var nameText: string = "aa";
-  
+  const [yearText, setYearText] = useState(now.getFullYear.toString);
+  const [monthText, setMonthText] = useState(now.getMonth.toString);
+  const [dayText, setDayText] = useState(now.getDay.toString);
+  const [timeText, setTimeText] = useState(now.getTime.toString);
+  const [taskText, setTaskText] = useState('タスクを入力してください');
+
+  const onChangeYear = (event: any) => {
+    setYearText(event.target.value);
+  }
+
+  const onChangeMonth = (event: any) => {
+    setYearText(event.target.value);
+  }
+
+  const onChangeDay = (event: any) => {
+    setYearText(event.target.value);
+  }
+
+  const onChangeTime = (event: any) => {
+    setYearText(event.target.value);
+  }
+
+  const onChangeTask = (event: any) => {
+    setYearText(event.target.value);
+  }
+
   const math: TaskData = {
     id: 99,
     limit: Timestamp.fromDate(new Date()),
@@ -40,7 +64,7 @@ function App() {
         taskData: arrayUnion(math)
       })
       const docRef = await addDoc(collection(db, "users"), {
-        name: nameText
+        name: yearText.toString
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -55,16 +79,7 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <input type="text" value={nameText} />
-        <button onClick={onClickAdd}>追加</button>
+      
       </header>
     </div>
   );
