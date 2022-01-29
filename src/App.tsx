@@ -13,12 +13,6 @@ interface TaskData {
   task: string,
 }
 
-interface Task {
-    doneTaskData: TaskData[],
-    pastTime: Timestamp,
-    taskData: TaskData[],
-}
-
 const app = initializeApp(firebaseConfig);
 
 var db = getFirestore();
@@ -26,7 +20,6 @@ var db = getFirestore();
 function App() {
   let now = new Date();
 
-  const [nameText, setNameText] = useState('bb');
   var [yearText, setYearText] = useState(now.getFullYear().toString());
   const [monthText, setMonthText] = useState((now.getMonth() + 1).toString());
   const [dayText, setDayText] = useState(now.getDate().toString());
@@ -57,9 +50,8 @@ function App() {
   const onChangeTask = (event: any) => {
     setTaskText(event.target.value);
   }
-  const year: number = parseInt(yearText);
 
-  const math: TaskData = {
+  const taskData: TaskData = {
     id: 99,
     limit: Timestamp.fromDate(new Date(parseInt(yearText), parseInt(monthText) - 1, parseInt(dayText), parseInt(hourText), parseInt(minuteText))),
     task: taskText,
@@ -68,19 +60,12 @@ function App() {
   const onClickAdd = async () => {
     try {
       await updateDoc(doc(db, "tasks", "フクダ"), {
-        taskData: arrayUnion(math)
+        taskData: arrayUnion(taskData)
       })
       alert(`${taskText}を追加しました`)
     } catch (e) {
       console.error("Error adding document: ", e);
     }
-  }
-
-  const onDateAdd = (num: string, add_num: number) => {
-    var end_num: number = 0;
-    end_num = parseInt(num) + add_num;
-
-    yearText = end_num.toString()
   }
 
   return (
