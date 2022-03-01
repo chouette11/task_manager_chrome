@@ -1,0 +1,16 @@
+.date_box {
+  width: 40px
+}
+
+.date_boxes {
+  display: flex;
+  flex-direction: row;
+}
+
+.text_boxes{
+  text-align: center;
+}
+
+.date_set {
+  flex-direction: column;
+}

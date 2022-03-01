@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, doc, setDoc, getDocs, Timestamp, updateDoc, Firestore, FieldValue, arrayUnion, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
@@ -11,12 +11,7 @@ interface TaskData {
   id: number,
   limit: Timestamp,
   task: string,
-}
-
-interface Task {
-    doneTaskData: TaskData[],
-    pastTime: Timestamp,
-    taskData: TaskData[],
+  noLimit: boolean;
 }
 
 const app = initializeApp(firebaseConfig);
@@ -26,23 +21,51 @@ var db = getFirestore();
 function App() {
   let now = new Date();
 
-  var nameText: string = "aa";
-  
-  const math: TaskData = {
+  var [yearText, setYearText] = useState(now.getFullYear().toString());
+  const [monthText, setMonthText] = useState((now.getMonth() + 1).toString());
+  const [dayText, setDayText] = useState(now.getDate().toString());
+  const [hourText, setHourText] = useState(now.getHours().toString());
+  const [minuteText, setMinuteText] = useState(now.getMinutes().toString());
+  const [taskText, setTaskText] = useState('タスクを入力してください');
+  const [check, setCheck] = useState(false);
+
+  const onChangeYear = (event: any) => {
+    setYearText(event.target.value);
+  }
+
+  const onChangeMonth = (event: any) => {
+    setMonthText(event.target.value);
+  }
+
+  const onChangeDay = (event: any) => {
+    setDayText(event.target.value);
+  }
+
+  const onChangeHour = (event: any) => {
+    setHourText(event.target.value);
+  }
+
+  const onChangeMinute = (event: any) => {
+    setMinuteText(event.target.value);
+  }
+
+  const onChangeTask = (event: any) => {
+    setTaskText(event.target.value);
+  }
+
+  const taskData: TaskData = {
     id: 99,
-    limit: Timestamp.fromDate(new Date()),
-    task: "数学",
+    limit: Timestamp.fromDate(new Date(parseInt(yearText), parseInt(monthText) - 1, parseInt(dayText), parseInt(hourText), parseInt(minuteText))),
+    task: taskText,
+    noLimit: check,
   }
 
   const onClickAdd = async () => {
     try {
       await updateDoc(doc(db, "tasks", "フクダ"), {
-        taskData: arrayUnion(math)
+        taskData: arrayUnion(taskData)
       })
-      const docRef = await addDoc(collection(db, "users"), {
-        name: nameText
-      });
-      console.log("Document written with ID: ", docRef.id);
+      alert(`${taskText}を追加しました`)
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -52,19 +75,28 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <input type="text" value={nameText} />
-        <button onClick={onClickAdd}>追加</button>
+        <div className='text_boxes'>
+          <div className='date_boxes'>
+            <div className='date_set'>
+              <input className="date_box" type="text" value={yearText} onChange={onChangeYear}/>
+              <label>年</label>
+            </div>
+            <input className="date_box" type="text" value={monthText} onChange={onChangeMonth}/>
+            <label>月</label>
+            <input className="date_box" type="text" value={dayText} onChange={onChangeDay}/>
+            <label>日</label>
+            <input className="date_box" type="text" value={hourText} onChange={onChangeHour}/>
+            <label>時</label>
+            <input className="date_box" type="text" value={minuteText} onChange={onChangeMinute}/>
+            <label>分</label>
+          </div>
+          <br></br>
+          <label>タスク:</label>
+          <input type="text" value={taskText} onChange={onChangeTask}/>
+          <input type="checkbox" onChange={() => setCheck(!check)}/>
+          <br></br>
+          <button onClick={onClickAdd}>追加</button>
+        </div>
       </header>
     </div>
   );
