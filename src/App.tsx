@@ -11,6 +11,7 @@ interface TaskData {
   id: number,
   limit: Timestamp,
   task: string,
+  noLimit: boolean;
 }
 
 const app = initializeApp(firebaseConfig);
@@ -26,6 +27,7 @@ function App() {
   const [hourText, setHourText] = useState(now.getHours().toString());
   const [minuteText, setMinuteText] = useState(now.getMinutes().toString());
   const [taskText, setTaskText] = useState('タスクを入力してください');
+  const [check, setCheck] = useState(false);
 
   const onChangeYear = (event: any) => {
     setYearText(event.target.value);
@@ -55,6 +57,7 @@ function App() {
     id: 99,
     limit: Timestamp.fromDate(new Date(parseInt(yearText), parseInt(monthText) - 1, parseInt(dayText), parseInt(hourText), parseInt(minuteText))),
     task: taskText,
+    noLimit: check,
   }
 
   const onClickAdd = async () => {
@@ -90,6 +93,7 @@ function App() {
           <br></br>
           <label>タスク:</label>
           <input type="text" value={taskText} onChange={onChangeTask}/>
+          <input type="checkbox" onChange={() => setCheck(!check)}/>
           <br></br>
           <button onClick={onClickAdd}>追加</button>
         </div>
