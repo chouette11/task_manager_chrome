@@ -1,11 +1,12 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.scss';
-import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, doc, setDoc, getDocs, Timestamp, updateDoc, Firestore, FieldValue, arrayUnion, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import { timeStamp } from 'console';
-import { firebaseConfig } from './fireconfig';
+import { firebaseConfig, loginWithGoogle, logout } from './fireconfig';
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
 
 interface TaskData {
   id: number,
@@ -14,7 +15,7 @@ interface TaskData {
   noLimit: boolean;
 }
 
-const app = initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 
 var db = getFirestore();
 
@@ -52,6 +53,33 @@ function App() {
   const onChangeTask = (event: any) => {
     setTaskText(event.target.value);
   }
+  
+  const [user, setUser] = React.useState<firebase.User>()
+  // バックグラウンドにサインイン状態を問い合わせる
+  // 一度サインイン後はポップアップを閉じてもバックグラウンドからサインイン状態を復帰できる
+  React.useEffect(() => {
+    chrome.runtime.sendMessage({ type: 'signin-state' }, function (response) {
+      if (response?.type === 'signin-state') {
+        setUser(response.user)
+      }
+    })
+  }, [])
+  // サインイン状態をウォッチする
+  // ポップアップ画面でサインインやサインアウトをした時、即座に画面に反映させるために使用
+  React.useEffect(() => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        setUser(before => {
+          if (before && before.uid === user.uid) {
+            return before
+          }
+          return user
+        })
+      } else {
+        setUser(undefined)
+      }
+    })
+  }, [])
 
   const taskData: TaskData = {
     id: 99,
@@ -95,7 +123,10 @@ function App() {
           <input type="text" value={taskText} onChange={onChangeTask}/>
           <input type="checkbox" onChange={() => setCheck(!check)}/>
           <br></br>
+          {user && (<p>{user.displayName}がサインインしています</p>)}
           <button onClick={onClickAdd}>追加</button>
+          <button onClick={loginWithGoogle}>ログイン</button>
+          <button onClick={logout}>ログアウト</button>
         </div>
       </header>
     </div>
