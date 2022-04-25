@@ -29,7 +29,7 @@ function App() {
   const [hourText, setHourText] = useState(now.getHours().toString());
   const [minuteText, setMinuteText] = useState(now.getMinutes().toString());
   const [taskText, setTaskText] = useState('タスクを入力してください');
-  const [check, setCheck] = useState(false);
+  const [check, setCheck] = useState(true);
 
   const onChangeYear = (event: any) => {
     setYearText(event.target.value);
