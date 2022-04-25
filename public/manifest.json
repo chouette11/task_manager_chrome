@@ -1,25 +1,21 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
+  "manifest_version": 2,
+  "name": "React Chrome Extension",
+  "version": "1",
+  "browser_action": {
+    "default_icon": "logo192.png",
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "identity"
   ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com https://apis.google.com https://securetoken.googleapis.com; object-src 'self'",
+  "oauth2": {
+    "client_id": "457643920892-ef44f6buuuvpt4aoih3shj4mkghfobb7.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAztnZILH1wpAISKXHZYzwFZd2M5XOoJrzScd+fYOe9rdJyALgM+B9O0D2s7xIApqREolii7IN8OEahFv9nhjhcUwMywURLJ6EIrxfcEHOyPZvnUWbaPqbNP4F3oRfVQzHzRRnOVj9dlGsBNJWwGi8TXpRivSVhDtkVeo/775chrWm+D8fmTTjxRAb5VLHt8xCdHff6U8cH+wXQz6x6nusOwBGgLFwaqYR7XgU6yKDer+N684J66ACO7kdD+AlWOdvvI9/cjJMuvhGuuOtCX3oM2wLWU//f7rnH3Ai4ky+uJIvPHCViwqlN4+u70tne9ZyG65g7yRJOWofexrKRJE87wIDAQAB"
 }
