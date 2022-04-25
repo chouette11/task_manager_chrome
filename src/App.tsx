@@ -6,10 +6,11 @@ import { useState } from "react";
 import { timeStamp } from 'console';
 import { firebaseConfig, loginWithGoogle, logout } from './fireconfig';
 import firebase from 'firebase/compat/app'
+import admin from 'firebase-admin'
 import 'firebase/compat/auth'
 
 interface TaskData {
-  id: number,
+  id: string,
   limit: Timestamp,
   task: string,
   noLimit: boolean;
@@ -81,17 +82,17 @@ function App() {
     })
   }, [])
 
-  const taskData: TaskData = {
-    id: 99,
-    limit: Timestamp.fromDate(new Date(parseInt(yearText), parseInt(monthText) - 1, parseInt(dayText), parseInt(hourText), parseInt(minuteText))),
-    task: taskText,
-    noLimit: check,
-  }
-
   const onClickAdd = async () => {
     try {
-      await updateDoc(doc(db, "tasks", "フクダ"), {
-        taskData: arrayUnion(taskData)
+      var uid: string = "";
+      if (user?.uid != undefined) {
+        uid = user.uid;
+      }
+      await addDoc(collection(db, 'tasks'), {
+        id: uid,
+        limit: Timestamp.fromDate(new Date(parseInt(yearText), parseInt(monthText) - 1, parseInt(dayText), parseInt(hourText), parseInt(minuteText))),
+        title: taskText,
+        isLimit: check,
       })
       alert(`${taskText}を追加しました`)
     } catch (e) {
